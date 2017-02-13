@@ -27,20 +27,20 @@ def getLightning(filename):
     return retVal
 
 
-def photometricStereo(lightning_filename, images_filenames):
+def photometricStereo(lightning, images_filenames):
     """Based on Woodham '79 article.
     I = Matrix of input images, rows being different images.
     N = lightning vectors
     N_i = inverse of N
     rho = albedo of each pixels
     """
-    lightning = getLightning(lightning_filename)
+    # lightning = getLightning(lightning_filename)
     images = list(map(getImage, images_filenames))
     n = len(images_filenames)
 
     I = np.vstack(x.ravel() for x in images)
     output = np.zeros((3, I.shape[1]))
-    N = np.vstack(lightning[x] for x in images_filenames)
+    N = np.vstack(lightning)
     N_i = np.linalg.pinv(N)
     rho = np.linalg.norm(N_i.dot( I ), axis=0)
     I = I / rho
