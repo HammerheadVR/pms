@@ -155,6 +155,7 @@ def photometricStereoWithoutLightning(images_filenames):
     #normals /= np.linalg.norm(normals, axis=0)
     normals = np.transpose(normals.reshape(3, w, h), (1, 2, 0))
     normals[:,:,1] *= -1
+
     return normals
 
 
