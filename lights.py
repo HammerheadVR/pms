@@ -6,6 +6,8 @@ import matplotlib
 # matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
 
+from sklearn.preprocessing import normalize
+
 from skimage import data
 from skimage.filters import threshold_otsu, threshold_adaptive
 from skimage.color import rgb2gray
@@ -42,11 +44,12 @@ def calculateLightDirection(image_location, center, radius, threshold = 0.95, de
         plt.scatter(center[0], center[1])
 
     # Calculate XYZ and return
-    x = (specular_center[0] - center[0]) / radius
-    y = (specular_center[1] - center[1]) / radius
-    z = math.sqrt(1.0 - pow(x, 2.0) - pow(y, 2.0)) # Equation of a sphere is x^2 + y^2 = 1
+    x = (specular_center[0] - center[0])
+    y = (specular_center[1] - center[1])
+    z = math.sqrt(pow(radius,2.0) - pow(x, 2.0) - pow(y, 2.0)) # Equation of a sphere is x^2 + y^2 = r^2
 
-    return (x,y,z)
+    return tuple([x,y,z]/np.linalg.norm([x,y,z])) # Convert to unit length
+
 
 def findCircleInMask(mask_location, debug=False):
     # Load mask image
