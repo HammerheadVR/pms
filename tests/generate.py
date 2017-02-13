@@ -42,7 +42,7 @@ def generateImages(template, light_positions, lightning_file="lightning.json"):
 
         generatePOVFile(filename, template, light_position)
         output = subprocess.call([
-            "povray",
+            "megapov",
             "+FN", # PNG
             "+W640", #"+W1024",
             "+H480", #"+H768",
