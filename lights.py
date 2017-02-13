@@ -20,7 +20,7 @@ def centroid(im):
 
 # Calculate light direction based on sphere
 # bounding_box: [x,y,width,height]
-def calculateLightDirection(image_location, center, radius, threshold = 0.95, show = False):
+def calculateLightDirection(image_location, center, radius, threshold = 0.95, debug = False):
     # Threshold the image
     im = pms.imread(image_location)
     im_gray = rgb2gray(im)
@@ -28,17 +28,16 @@ def calculateLightDirection(image_location, center, radius, threshold = 0.95, sh
     # global_thresh = threshold_otsu(im_gray)
     im_gray_thresh = im_gray > threshold
 
-    # Cut out bounding box
-    im_gray_thresh_box = im_gray_thresh
+    if debug:
+        fig, ax = plt.subplots(1)
 
-    if show:
-        plt.imshow(im_gray_thresh_box, cmap='gray')
+        plt.imshow(im_gray, cmap='gray')
         plt.show()
 
     # Calculate center of pixels (hopefully only the highlight)
-    specular_center = centroid(im_gray_thresh_box)
+    specular_center = centroid(im_gray_thresh)
 
-    if show:
+    if debug:
         plt.scatter(specular_center[0], specular_center[1])
         plt.scatter(center[0], center[1])
 
@@ -49,19 +48,40 @@ def calculateLightDirection(image_location, center, radius, threshold = 0.95, sh
 
     return (x,y,z)
 
-if __name__ == '__main__':
+def findCircleInMask(mask_location, debug=False):
     # Load mask image
-    im = pms.imread("../psmImages/chrome/chrome.mask.png")
+    im = pms.imread(mask_location)
     im_gray = rgb2gray(im)
+
+    if debug:
+        fig, ax = plt.subplots(1)
+        ax.imshow(im_gray, cmap='gray')
 
     # Calculate centroid
     center = centroid(im_gray)
 
+    if debug:
+        plt.scatter(center[0], center[1])
+
     # Calculate edge image
     edges = canny(im_gray)
-    edge_pixels = np.transpose(np.nonzero(edges))
+    edge_pixels = np.transpose(np.nonzero(edges))  # ROW MAJOR! So y,x instead of x,y (yay data science)
 
-    radii = map(lambda x: np.linalg.norm(map(sub, x, center)), edge_pixels)
+    # edge_pixels_t = np.transpose(edge_pixels)
+    # plt.scatter(edge_pixels_t[1], edge_pixels_t[0], facecolor='b')
+
+    radii = map(lambda x: np.linalg.norm(map(sub, x[::-1], center)),
+                edge_pixels)  # x[[::-1] reverses the list (swaps x,y)
     radius = np.mean(radii)
+
+    if debug:
+        circle1 = plt.Circle((center[0], center[1]), radius, edgecolor='r', facecolor='none')
+        ax.add_artist(circle1)
+        plt.show()
+
+    return (center, radius)
+
+if __name__ == '__main__':
+    (center, radius) = findCircleInMask("../psmImages/chrome/chrome.mask.png", True)
 
     print(calculateLightDirection("../psmImages/chrome/chrome.0.png", center, radius, 0.95, True))
