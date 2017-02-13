@@ -1,0 +1,4 @@
+tests/*.png
+*.stl
+*.pyc
+tests/*.json

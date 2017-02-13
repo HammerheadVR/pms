@@ -9,7 +9,7 @@ from scipy import sparse
 from scipy import optimize
 
 import matplotlib
-matplotlib.use('Agg')
+matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
 
 import mesh

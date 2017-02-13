@@ -60,15 +60,15 @@ light_positions = list(product(*lights))
 
 
 def test_sphere():
-#    doTestAndComparePMS("sphere.pov.tmpl", light_positions)
-    doTestAndComparePMSwL("sphere.pov.tmpl", light_positions)
+   doTestAndComparePMS("sphere.pov.tmpl", light_positions)
+#     doTestAndComparePMSwL("sphere.pov.tmpl", light_positions)
 
-#def test_cube_front():
-#    doTestAndComparePMS("cube_front.pov.tmpl", light_positions)
+def test_cube_front():
+   doTestAndComparePMS("cube_front.pov.tmpl", light_positions)
 #    doTestAndComparePMSwL("cube_front.pov.tmpl", light_positions)
 
-#def test_cube_angled():
-#    doTestAndComparePMS("cube_angled.pov.tmpl", light_positions)
+def test_cube_angled():
+   doTestAndComparePMS("cube_angled.pov.tmpl", light_positions)
 #    doTestAndComparePMSwL("cube_angled.pov.tmpl", light_positions)
 
 
